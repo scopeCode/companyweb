@@ -1,11 +1,83 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <style>
+      .file {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+      }
+      .file input {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+      }
+      .file:hover {
+        background: #AADFFD;
+        border-color: #78C3F3;
+        color: #004974;
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <p>Welcome to <%= title %></p>蛇尾丸
+
+    <form id="fileForm" method="post" action="/upload">
+      <a href="javascript:;" class="file">选择文件
+        <input type="file" name="loadFile" id="loadFile" multiple="multiple">
+      </a>
+    </form>
+
+<script>
+
+  $('document').ready(function(){
+
+    $("#loadFile").on("change",function(){
+      // 获得上传文件DOM对象
+      var oFiles = document.querySelector("#loadFile").files;
+      // 实例化一个表单数据对象
+            var formData = new FormData();
+      // 遍历图片文件列表，插入到表单数据中
+            for (var i = 0, file; file = oFiles[i]; i++) {
+              // 文件名称，文件对象
+              formData.append(file.name, file);
+            }
+
+        var host = 'http://'+window.location.host;
+        $.ajax({
+          url:host+'/upload',
+          type:'POST',
+          data:formData,
+          success:function(data,status){
+            console.log(data);
+          },
+          error:function(res){
+            console.error(res);
+          }
+        });
+
+    });
+
+
+  });
+
+</script>
+
   </body>
 </html>

@@ -5,6 +5,7 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/body.css' />
+    <script type="text/javascript" src="/javascripts/jquery-1.11.3.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -29,5 +30,35 @@
       </section><!-- content -->
     </div>
     <!-- container -->
+
+    <script>
+      $(document).ready(function(){
+
+        $("#js-btn-login").on("click",function(){
+              var uName = $("#username").val();
+              var uPwd  = $("#password").val();
+
+              var data = "uName="+uName+"&uPwd="+uPwd;
+
+              console.log(data);
+              var host = 'http://'+window.location.host;
+              $.ajax({
+                url:host+'/login/login',
+                type:'POST',
+                data:data,
+                success:function(data,status){
+                  if(status == 'success'){
+                    location.href=host;
+                  }
+                },
+                error:function(res){
+                    console.error(res);
+                }
+              });
+        });
+
+
+      });
+    </script>
   </body>
 </html>
