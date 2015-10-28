@@ -38,11 +38,9 @@
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>蛇尾丸
 
-    <form id="fileForm" method="post" action="/upload">
-      <a href="javascript:;" class="file">选择文件
-        <input type="file" name="loadFile" id="loadFile" multiple="multiple">
-      </a>
-    </form>
+    <a href="javascript:;" class="file">选择文件
+      <input type="file" name="loadFile" id="loadFile" >
+    </a>
 
 <script>
 
@@ -52,20 +50,30 @@
       // 获得上传文件DOM对象
       var oFiles = document.querySelector("#loadFile").files;
       // 实例化一个表单数据对象
-            var formData = new FormData();
+      var formData = new FormData();
       // 遍历图片文件列表，插入到表单数据中
-            for (var i = 0, file; file = oFiles[i]; i++) {
-              // 文件名称，文件对象
-              formData.append(file.name, file);
-            }
+      for (var i = 0, file; file = oFiles[i]; i++) {
+        // 文件名称，文件对象
+        formData.append("uploadFile", file);
+      }
 
-        var host = 'http://'+window.location.host;
+      var host = 'http://'+window.location.host;
         $.ajax({
           url:host+'/upload',
-          type:'POST',
+          cache: false,
+          type: 'post',
+          dataType: 'json',
+          contentType: false,
+          processData: false,
           data:formData,
           success:function(data,status){
-            console.log(data);
+            if(status === "success"){
+              alert("上传成功..  key:"+data.key+",hash:"+data.hash);
+              $("#img").attr("src","http://7xjik2.com1.z0.glb.clouddn.com/"+data.key);
+            }else{
+              alert("上传失败");
+              console.log(datat);
+            }
           },
           error:function(res){
             console.error(res);
@@ -78,6 +86,6 @@
   });
 
 </script>
-
+<img id="img" src=""/>
   </body>
 </html>
