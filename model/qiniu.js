@@ -20,7 +20,7 @@ qiniu.conf.SECRET_KEY = config.SECRET_KEY;
  * @param success   成功回调函数
  * @param error     失败回调函数
  */
-qn.uploadFile = function(key,filePath,_config,success,error){
+qn.putFile = function(key,filePath,_config,success,error){
 
     //如果没有设定 则是默认
     config = extend(config,_config);
@@ -32,6 +32,31 @@ qn.uploadFile = function(key,filePath,_config,success,error){
     var token = putPolicy.token();
     try{
         qiniu.io.putFile(token,key,filePath,extra,function(err, ret){
+            if(!err) {
+                success(ret);
+            }
+            else {
+                error(err);
+            }
+        });
+    }catch(ex){
+        error(ex);
+    }
+};
+
+qn.putWithoutKey = function(filePath,_config,success,error){
+    console.log("filePath:"+filePath);
+    //如果没有设定 则是默认
+    config = extend(config,_config);
+    success = success || function(){};
+    error = error || function(){};
+
+    var putPolicy = new qiniu.rs.PutPolicy(config.BUCKETNAME);
+    var extra = new qiniu.io.PutExtra();
+    var token = putPolicy.token();
+    try{
+        //(uptoken, loadFile, extra, onret)
+        qiniu.io.putFileWithoutKey(token,filePath,extra,function(err, ret){
             if(!err) {
                 success(ret);
             }

@@ -16,16 +16,16 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/upload', function (req,res,next) {
-  var config ={
-    ACCESS_KEY:'YYFZ8Mv3gARmlE8-MDc-zj8Yp0p__SoQj6u_Vjuc',
-    SECRET_KEY:'Qpmmt-jax55bZxWVC0lLmE__QJgEAfAyGG1CUkVZ',
-    BUCKETNAME:'baby',
-  }
   //(key,filePath,bucketname,success,error)
-  qn.uploadFile("img/"+req.files.uploadFile.name,req.files.uploadFile.path,config,function(ret){
-    res.send(200,{key:ret.key,hash:ret.hash});
-  },function(err){
-    res.send(500,{err:err});
-  });
+  try{
+    qn.putWithoutKey(req.files.uploadFile.path,null,function(ret){
+      res.send(200,{key:ret.key,hash:ret.hash});
+    },function(err){
+      res.send(500,{err:err});
+    });
+  }catch(ex){
+    console.error(ex);
+  }
+
 });
 module.exports = router;
