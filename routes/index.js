@@ -1,5 +1,5 @@
 var express = require('express');
-var qn = require("../model/qiniu");
+var qn = require("scj/qiniu");
 
 var router = express.Router();
 
