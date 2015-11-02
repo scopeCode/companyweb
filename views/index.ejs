@@ -5,6 +5,7 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script src="/javascripts/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="/javascripts/jquery.form.js" type="text/javascript"></script>
     <style>
       .file {
         position: relative;
@@ -38,13 +39,51 @@
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>蛇尾丸
 
+
+    <br/>
+    利用 [connect-multiparty] 进行上传文件
+    <br/>
+
     <a href="javascript:;" class="file">选择文件
-      <input type="file" name="loadFile" id="loadFile" >
+      <input type="file" name="upload" id="loadFile" >
     </a>
+
+    <br/>
+      利用 [formidable] 进行上传文件
+    <br/>
+    <form action="/uploada" enctype="multipart/form-data" method="post" id="myform">
+      <a href="javascript:;" class="file">选择文件
+        <input type="file" id="formidable" name="uploadq" multiple="multiple"><br>
+      </a>
+    </form>
 
 <script>
 
   $('document').ready(function(){
+
+    $("#formidable").on("change",function(){
+      var host = 'http://'+window.location.host;
+      $("#myform").ajaxSubmit({
+        url:host+'/uploada',
+        cache: false,
+        type: 'post',
+        dataType: 'json',
+        contentType: false,
+        processData: false,
+        success:function(data,status){
+          if(status === "success"){
+            alert("上传成功..  key:"+data.key+",hash:"+data.hash);
+            $("#img").attr("src","http://7xjik2.com1.z0.glb.clouddn.com/"+data.key);
+          }else{
+            alert("上传失败");
+            console.log(datat);
+          }
+        },
+        error:function(res){
+          console.error(res);
+        }
+      });
+    });
 
     $("#loadFile").on("change",function(){
       // 获得上传文件DOM对象
@@ -67,6 +106,8 @@
           processData: false,
           data:formData,
           success:function(data,status){
+            console.log(data);
+
             if(status === "success"){
               alert("上传成功..  key:"+data.key+",hash:"+data.hash);
               $("#img").attr("src","http://7xjik2.com1.z0.glb.clouddn.com/"+data.key);
